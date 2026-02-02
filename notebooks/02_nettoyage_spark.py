@@ -50,6 +50,50 @@ def show_startup_message():
     print(" " * 20 + "Objectif: Transformer les données brutes en données exploitables")
     print("=" * 100)
 
+def check_environment_vars():
+    ## Python
+    if os.path.exists(PYTHON_PATH):
+        print("[ok]: Python exists at path:", PYTHON_PATH)
+    else:
+        print("[ko]: Python not exists at path:", PYTHON_PATH)
+        sys.exit(1)
+   
+    ## Java
+    if os.path.exists(os.environ["JAVA_HOME"]) and os.path.exists(os.path.join(os.environ["JAVA_HOME"], "bin", "java.exe")):
+        print("[ok]: Java exists at path:", os.environ["JAVA_HOME"])
+    else:
+        print("[ko]: Java not exists at path:", os.environ["JAVA_HOME"])
+        sys.exit(1)
+   
+    ## Hadoop
+    if os.path.exists(os.environ["HADOOP_HOME"]):
+        print("[ok]: Hadoop exists at path:", os.environ["HADOOP_HOME"])
+    else:
+        print("[ko]: Hadoop not exists at path:", os.environ["HADOOP_HOME"])
+        sys.exit(1)
+    if os.path.exists(os.path.join(os.environ["HADOOP_HOME"], "bin", "winutils.exe")):
+        print("[ok]: Hadoop module 'winutils.exe' exists at path:", os.path.join(os.environ["HADOOP_HOME"], "bin", "winutils.exe"))
+    else:
+        print("[ko]: Hadoop module 'winutils.exe' do not exists")
+        sys.exit(1)
+    if os.path.exists(os.path.join(os.environ["HADOOP_HOME"], "bin", "hadoop.dll")):
+        print("[ok]: Hadoop module 'hadoop.dll' exists at path:", os.path.join(os.environ["HADOOP_HOME"], "bin", "hadoop.dll"))
+    else:
+        print("[ko]: Hadoop module 'hadoop.dll' do not exists")
+        sys.exit(1)
+   
+    ## Pyspark
+    if os.path.exists(os.environ["PYSPARK_PYTHON"]):
+        print("[ok]: PYSPARK module exists at path:", os.environ["PYSPARK_PYTHON"])
+    else:
+        print("[ko]: PYSPARK module do not exists at path:", os.environ["PYSPARK_PYTHON"])
+        sys.exit(1)
+    if os.path.exists(os.environ["PYSPARK_DRIVER_PYTHON"]):
+        print("[ok]: PYSPARK DRIVER PYTHON module exists at path:", os.environ["PYSPARK_DRIVER_PYTHON"])
+    else:
+        print("[ko]: PYSPARK DRIVER PYTHON module do not exists at path:", os.environ["PYSPARK_DRIVER_PYTHON"])
+        sys.exit(1)
+
 def create_spark_session() -> SparkSession | None:
     """Cree et configure la session Spark."""
     spark = SparkSession.builder \
@@ -162,6 +206,10 @@ def main():
 
         ## Show startup message
         show_startup_message()
+
+        ## Check les variables d'environement nécéssaires au fonctionement de ce script
+        print("\nCheck les variables d'environement nécéssaires au fonctionement de ce script ...")
+        check_environment_vars()
 
         ## Creation d'une session Spark 
         print("\nCreation d'une session Spark ...\n")
